@@ -1,0 +1,18 @@
+1 get data:
+	1.0 : formulate the get request using awk (linux only)
+		1.0.1 associate the item name to item id (ex : Carrot Seeds -> T1_FARM_CARROT_SEED)
+		1.0.2 create the request string 
+	1.1 : request the item stats using wget as json
+	1.2 load data into a python script
+2 process data
+	???
+3 show data
+	???
+
+
+alternative method in python:
+
+get the item id 
+create the request string
+show prices in all cities
+
