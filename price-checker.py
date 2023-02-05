@@ -2,6 +2,7 @@ import json
 import linecache
 import subprocess
 import os
+import time
 
 # Functons:
 def runcmd(cmd, verbose = False, *args, **kwargs):
@@ -19,7 +20,8 @@ def runcmd(cmd, verbose = False, *args, **kwargs):
     pass
 
 
-
+def file_age(filepath):
+	return time.time() - os.path.getmtime(filepath)
     
 # Create request string
 # Only prices request implemented for now
@@ -48,7 +50,7 @@ with open(itemFile) as f:
     itemLineArray = itemLine.split()
     print("Item ID: ",end='')
     print(itemLineArray[1])
-
+    print("")
 itemID = itemLineArray[1]
 itemID_JSON = itemID + ".json"
 requestItemPrice = requestPrice + itemID_JSON
@@ -57,29 +59,30 @@ requestItemPrice = requestPrice + itemID_JSON
 # i need to find a way to check the time and update if long enough has passed
 #Check if the file already exists:
 file_exists = False
-directory  = os.scandir()
+os.chdir("data/")
+directory = os.scandir()
+os.chdir("..")
 for entry in directory:
-    print(entry.name)
-    if entry.name == itemID_JSON:
-        print("File already exists, skipping download...")
-        file_exists = True
+	if entry.name == itemID_JSON:
+		print("File already exists, skipping download...")
+		print("")
+		file_exists = True
 if file_exists == False:
-    #Download the file:
-    print(requestItemPrice)
-    runcmd("wget " + requestItemPrice + " --directory-prefix=data", verbose = True)
+	#Download the file:
+	print(requestItemPrice)
+	runcmd("wget " + requestItemPrice + " --directory-prefix=data", verbose = True)
 
 
 # Process data
 # Make output more readable, make it so it shows the time
 # Maybe use tabulate? 
 
-file = "data/" + itemID_JSON
+file = "data/" +  itemID_JSON
 with open(file) as f:
-        data = json.load(f)
+	data = json.load(f)
 print("Showing prices for " + data[0]["item_id"])
 for element in data:
-    print("Location: ", end='')
-    print(element["city"])
-    print("Price: ", end='')
-    print(element["sell_price_min"])
-    
+	print("Location: ", end='')
+	print(element["city"])
+	print("Price: ", end='')
+	print(element["sell_price_min"])   
