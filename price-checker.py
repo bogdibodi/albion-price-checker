@@ -51,17 +51,20 @@ with open(itemFile) as f:
     print("Item ID: ",end='')
     print(itemLineArray[1])
     print("")
-itemID = itemLineArray[1]
-itemID_JSON = itemID + ".json"
+
+itemID_JSON = itemLineArray[1] + ".json"
+#itemID_JSON = itemID + ".json"
 requestItemPrice = requestPrice + itemID_JSON
 
 # the problem with this is that I will never update prices this way
 # i need to find a way to check the time and update if long enough has passed
 #Check if the file already exists:
+
 file_exists = False
 os.chdir("data/")
 directory = os.scandir()
 os.chdir("..")
+
 for entry in directory:
 	if entry.name == itemID_JSON:
 		print("File already exists, skipping download...")
