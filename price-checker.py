@@ -21,18 +21,21 @@ def runcmd(cmd, verbose = False, *args, **kwargs):
 
 
 def file_age(filepath):
-	return time.time() - os.path.getmtime(filepath)
+	fileStat = os.stat(filepath)
+	# Return age of file in hours
+	return (fileStat.st_mtime / 60) / 60
+
     
 # Create request string
 # Only prices request implemented for now
 requestBase = "https://www.albion-online-data.com/api/v2/stats/"
 requestPrice = requestBase + "Prices/"
-
+itemFile = "items.txt"
 
 # Search for the item ID:
 print("Item name: ",end='')
 item = input()
-itemFile = "items.txt"
+
 
 
 #Show all the items that fit the criteria:
@@ -53,8 +56,8 @@ with open(itemFile) as f:
     print("")
 
 itemID_JSON = itemLineArray[1] + ".json"
-#itemID_JSON = itemID + ".json"
 requestItemPrice = requestPrice + itemID_JSON
+ageTreshold = 12 # set the limit for how old the file can be before needing to download it again
 
 # the problem with this is that I will never update prices this way
 # i need to find a way to check the time and update if long enough has passed
@@ -63,11 +66,17 @@ requestItemPrice = requestPrice + itemID_JSON
 file_exists = False
 os.chdir("data/")
 directory = os.scandir()
+folderPath = os.getcwd() + "/"
 os.chdir("..")
 
 for entry in directory:
 	if entry.name == itemID_JSON:
-		print("File already exists, skipping download...")
+		# Make sure file is not older than 12 hours
+		print("File already exists, checking age...")
+		if file_age(folderPath + itemID_JSON) > ageTreshold:
+			print("File is too old, downloading...")
+			break
+		print("File age OK, skipping download...") 
 		print("")
 		file_exists = True
 if file_exists == False:
