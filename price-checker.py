@@ -57,11 +57,8 @@ with open(itemFile) as f:
 
 itemID_JSON = itemLineArray[1] + ".json"
 requestItemPrice = requestPrice + itemID_JSON
-ageTreshold = 12 # set the limit for how old the file can be before needing to download it again
+ageTreshold = 6 # set the limit for how old the file can be before needing to download it again
 
-# the problem with this is that I will never update prices this way
-# i need to find a way to check the time and update if long enough has passed
-#Check if the file already exists:
 
 file_exists = False
 # Go into data folder
@@ -72,7 +69,7 @@ itemPath = os.getcwd() + "/" + itemID_JSON
 
 for entry in directory:
 	if entry.name == itemID_JSON:
-		# Make sure file is not older than 12 hours
+		# Make sure file is not older than the treshold
 		print("File already exists, checking age...")
 		if file_age(itemPath) > ageTreshold:
 			print("File is too old, downloading...")
