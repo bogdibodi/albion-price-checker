@@ -64,25 +64,31 @@ ageTreshold = 12 # set the limit for how old the file can be before needing to d
 #Check if the file already exists:
 
 file_exists = False
+# Go into data folder
 os.chdir("data/")
 directory = os.scandir()
-folderPath = os.getcwd() + "/"
-os.chdir("..")
+itemPath = os.getcwd() + "/" + itemID_JSON
+
 
 for entry in directory:
 	if entry.name == itemID_JSON:
 		# Make sure file is not older than 12 hours
 		print("File already exists, checking age...")
-		if file_age(folderPath + itemID_JSON) > ageTreshold:
+		if file_age(itemPath) > ageTreshold:
 			print("File is too old, downloading...")
+			os.remove(itemPath)	
 			break
 		print("File age OK, skipping download...") 
 		print("")
 		file_exists = True
+# Go back to albion-data folder
+os.chdir("..")
+
 if file_exists == False:
 	#Download the file:
 	print(requestItemPrice)
 	runcmd("wget " + requestItemPrice + " --directory-prefix=data", verbose = True)
+
 
 
 # Process data
